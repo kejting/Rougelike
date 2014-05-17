@@ -2,18 +2,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class Renderer extends JPanel implements ActionListener{
+public class Renderer extends JPanel/* implements ActionListener*/{
   private JFrame mainFrame;
   private final int WINDOW_X = 600, WINDOW_Y = 400;
 
   private Map map;
-  //Swing shizz
-  public Renderer(){      
+
+  public Renderer(KeyListener keyListener){      
     map = new Map("map.txt");
-    
-    Entity testEntity = new Entity();
-    testEntity.addComponent(new CMoving(testEntity));
-    
+     
     setDoubleBuffered(true);
     this.setPreferredSize(new Dimension(WINDOW_X,WINDOW_Y));
     mainFrame = new JFrame("Roguelike");
@@ -22,12 +19,23 @@ public class Renderer extends JPanel implements ActionListener{
     mainFrame.setVisible(true);
     mainFrame.pack();
     mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
+    mainFrame.addKeyListener(keyListener);
+    
+    //This is how we get key bindings, except instead of printing we'd make the player do whatever
+    /*InputMap inMap = getInputMap(JComponent.WHEN_FOCUSED);
+    ActionMap aMap = getActionMap();
+    inMap.put(KeyStroke.getKeyStroke("W"), "moveUp");
+    aMap.put("moveUp", new AbstractAction(){
+      @Override
+      public void actionPerformed(ActionEvent e){
+        System.out.println("Moved up");
+      }
+    });*/
   }
   
-  //@Override
+  /*//@Override
   public void actionPerformed(ActionEvent e){
-  }
-
+  }*/
   
   @Override
   public void paintComponent(Graphics g){
@@ -41,6 +49,13 @@ public class Renderer extends JPanel implements ActionListener{
   }
   
   public static void main(String [] args){
-    Renderer rend = new Renderer();
+    EntityManager manager = new EntityManager();
+    PlayerKeyListener listener = new PlayerKeyListener(manager);
+    Renderer rend = new Renderer(listener);
+    while(true){
+      listener.waitForInput();
+      System.out.println("thing happened");
+      rend.repaint();
+    }
   }
 }
