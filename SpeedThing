@@ -1,4 +1,4 @@
-//lots of println stuff because trying to figure out whats working
+
 import java.util.Arrays;
 public class SpeedThing{
   //just put an array here
@@ -10,7 +10,7 @@ public class SpeedThing{
     s.initialize();
     for(int x = 0; x < 10; x++){
       s.move(s.speeds);
-      Arrays.sort(s.speeds);
+
     }
   }
   
@@ -21,26 +21,27 @@ public class SpeedThing{
     for(int x = 0; x < speeds.length; x++){
       staticSpeeds[x] = speeds[x];
       System.out.println("Number = " + speeds[x]);
-      System.out.println("Duplicate " + staticSpeeds[x]);
     }
   }
   
   //subtracts the lowest value (so the thing that hits 0 moves)
   public void move(int[] speeds){
-    Arrays.sort(speeds);
     int subtract = speeds[0];
-    System.out.println(" ");
+    for(int u = 0; u < speeds.length; u ++){
+      if(speeds[u] < subtract){
+        subtract = speeds[u];
+      }
+    }
+
+    System.out.println("subtract " + speeds[0]);
     for(int y = 0; y < speeds.length; y++){
       
-      speeds[y] -= subtract;
-      System.out.println("Subtracting " + subtract);
+      speeds[y] = speeds[y] - subtract;
+      
       if(speeds[y] == 0){
-        //this this would move
-        speeds[y] = staticSpeeds[y];
-        
+        speeds[y] = staticSpeeds[y];  
       }
-      System.out.println(" " +speeds[y]);
+      System.out.print(" " +speeds[y]);
     }
-    Arrays.sort(speeds);
   }
 }
