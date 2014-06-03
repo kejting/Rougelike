@@ -2,8 +2,8 @@
 //everythign that's a component extends it.
 //
 abstract class CBase{
-  Entity owner;
-  CBase(Entity o){
+  protected Entity owner;
+  protected CBase(Entity o){
     owner = o;
   }
 }

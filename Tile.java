@@ -17,7 +17,7 @@ public class Tile {
   private Tile(int ID){
     this.ID = ID;
   }
-  public void drawTile(Graphics2D g2d, int x, int y){
+  public void draw(Graphics2D g2d, int x, int y){
     int xPos = ID%TILES_PER_X;
     int yPos = ID/TILES_PER_Y;
     g2d.drawImage(IMG_FILE, x*TILE_X, y*TILE_Y, (x+1)*TILE_X, (y+1)*TILE_Y,
@@ -36,6 +36,9 @@ public class Tile {
   }
   public static Tile getTile(Integer ID){
     return tiles.get(ID);
+  }
+  public boolean isCollideable(){
+    return collideable;
   }
   /*public static BufferedImage getImage(){
     return imgFile;
