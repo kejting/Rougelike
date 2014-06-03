@@ -1,4 +1,4 @@
-import java.util.*;
+/*import java.util.*;
 import java.io.*;
 public class MapGen{
  //dimensions of map
@@ -197,7 +197,7 @@ public class MapGen{
   }
   return true;
  }
-}
+
  public boolean createMap(int inx, int iny, int h){
   if (h < 1) objects = 10;
   else objects = h;
@@ -301,3 +301,4 @@ public class MapGen{
   System.out.println(msgNumObjects + currentFeatures);
   return true;
  }
+}*/

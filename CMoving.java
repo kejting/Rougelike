@@ -16,7 +16,6 @@ class CMoving extends CBase{
       offY = y;
     }
   }
-  private static LinkedList<Entity> entities = new LinkedList<Entity>();
   public CMoving(Entity o, int x, int y){
     this(o, x, y, true);
   }
@@ -26,9 +25,6 @@ class CMoving extends CBase{
     posX = x;
     posY = y;
     collideable = col;
-    //if the thing will be need to be seen by physics we add it to a bin of shit 
-    if(collideable)
-      entities.add(owner);
     map.setEntity(posX, posY, owner);
   }
   public static void setMap(GameMap m){
@@ -51,4 +47,6 @@ class CMoving extends CBase{
   public boolean isCollideable(){
     return collideable;
   }
+  public int getX(){return posX;}
+  public int getY(){return posY;}
 }

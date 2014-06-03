@@ -29,14 +29,21 @@ public class Renderer extends JPanel/* implements ActionListener*/{
   }
   
   public static void main(String [] args){
-    Entity player = new Entity();
-    PlayerKeyListener listener = new PlayerKeyListener(player);
     EntityManager manager = new EntityManager();
-    manager.setPlayer(player);
+    CAI.setManager(manager);
+    PlayerKeyListener listener = new PlayerKeyListener(manager.getPlayer());
     Renderer rend = new Renderer(listener, manager);
     CMoving.setMap(manager.getMap());
     
-    player.addComponent(new CMoving(player,5 ,5));
+    manager.getPlayer().addComponent(new CMoving(manager.getPlayer(),5 ,5));
+    
+    Entity enemy1 = new Entity();
+    enemy1.addComponent(new CMoving(enemy1, 6,6));
+    manager.addEntity(enemy1);
+    Entity enemy2 = new Entity();
+    enemy2.addComponent(new CMoving(enemy2, 7, 9));
+    enemy2.addComponent(new CAI(enemy2));
+    manager.addEntity(enemy2);
     while(true){
       rend.repaint();
       listener.waitForInput();

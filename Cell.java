@@ -14,12 +14,12 @@ public class Cell {
   }
   public boolean canWalk(){
     //add something if there is an entity here too
-    return(!tileType.isCollideable() && (entity == null || entity.getComponent(CMoving.class)==null || ((CMoving)entity.getComponent(CMoving.class)).isCollideable()));
+    return(!tileType.isCollideable() && (entity == null || entity.getComponent(CMoving.class)==null || !((CMoving)entity.getComponent(CMoving.class)).isCollideable()));
   }
   public void setEntity(Entity e){
     entity =e;
   }
-  public final Entity getEntity(){
+  public Entity getEntity(){
     return entity;
   }
 }
