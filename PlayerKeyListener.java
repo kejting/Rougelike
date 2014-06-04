@@ -21,6 +21,7 @@ public class PlayerKeyListener implements KeyListener{
   public void keyPressed(KeyEvent e){
     
     CMoving mov = (CMoving)player.getComponent(CMoving.class);
+    if(waitLatch.getCount() == 0) return;
     switch(Character.toUpperCase(e.getKeyChar())){
       case 'W':
         if(mov.move(CMoving.Direction.UP))
