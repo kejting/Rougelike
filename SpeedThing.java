@@ -1,47 +1,49 @@
-
-import java.util.Arrays;
+//generates moves that occur each time before the player gets to move again (assuming player speed is the first value in the array)
+import java.util.*;
 public class SpeedThing{
   //just put an array here
   int[] speeds = {5, 6, 9};
-  int[] staticSpeeds = new int[speeds.length];
+  final int[] staticSpeeds = {5, 6, 9};
   
   public static void main(String[] args){
     SpeedThing s = new SpeedThing();
-    s.initialize();
-    for(int x = 0; x < 10; x++){
-      s.move(s.speeds);
-
+    for(int j = 0; j < 10; j++){
+      LinkedList<Integer> list = s.generateList(s.speeds);
     }
   }
   
-  //sort the first time
-  public void initialize(){
-    Arrays.sort(speeds);
-    System.out.println("In order:");
-    for(int x = 0; x < speeds.length; x++){
-      staticSpeeds[x] = speeds[x];
-      System.out.println("Number = " + speeds[x]);
-    }
-  }
   
-  //subtracts the lowest value (so the thing that hits 0 moves)
-  public void move(int[] speeds){
-    int subtract = speeds[0];
-    for(int u = 0; u < speeds.length; u ++){
-      if(speeds[u] < subtract){
-        subtract = speeds[u];
+  //makes a list of moves
+  public LinkedList<Integer> generateList(int[] speeds){
+    LinkedList<Integer> list = new LinkedList<Integer>();
+    int subtract;
+    int pos ;
+    
+    //finds lowest value in array and subtracts that from each integer in array
+    while(true){
+      pos = 0;
+      subtract = speeds[0];
+      for(int u = 1; u < speeds.length; u ++){
+        if(speeds[u] < subtract){
+          pos = u;
+          subtract = speeds[u];
+        }
       }
-    }
-
-    System.out.println("subtract " + speeds[0]);
-    for(int y = 0; y < speeds.length; y++){
       
-      speeds[y] = speeds[y] - subtract;
-      
-      if(speeds[y] == 0){
-        speeds[y] = staticSpeeds[y];  
+      for(int y = 0; y < speeds.length; y++){
+        
+        speeds[y] = speeds[y] - subtract;
+        
+        //if a value in array hits 0, that item would move and this is added to the list of moves
+        if(speeds[y] == 0){
+          speeds[y] = staticSpeeds[y];
+          list.add(y);
+          if(y == 0) return list;
+        }
+        
       }
-      System.out.print(" " +speeds[y]);
+      System.out.println();
+      if(pos == 0) return list;
     }
   }
 }
