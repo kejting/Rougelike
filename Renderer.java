@@ -30,24 +30,30 @@ public class Renderer extends JPanel/* implements ActionListener*/{
   
   public static void main(String [] args){
     EntityManager manager = new EntityManager();
+    CMoving.setMap(manager.getMap());
     CAI.setManager(manager);
     PlayerKeyListener listener = new PlayerKeyListener(manager.getPlayer());
     Renderer rend = new Renderer(listener, manager);
-    CMoving.setMap(manager.getMap());
     
-    manager.getPlayer().addComponent(new CMoving(manager.getPlayer(),5 ,5));
+    manager.getPlayer().addComponent(new CMoving(manager.getPlayer(),6 ,5));
+    manager.getPlayer().addComponent(new CActor(manager.getPlayer(), 10, listener));
     
-    Entity enemy1 = new Entity();
+    /*Entity enemy1 = new Entity();
     enemy1.addComponent(new CMoving(enemy1, 6,6));
     manager.addEntity(enemy1);
     Entity enemy2 = new Entity();
     enemy2.addComponent(new CMoving(enemy2, 7, 9));
-    enemy2.addComponent(new CAI(enemy2));
+    enemy2.addComponent(new CAI(enemy2, 200));
     manager.addEntity(enemy2);
+    enemy1.addComponent(new CAI(enemy1, 100));*/
+    for(int i = 0; i < 10; i++){
+      Entity enemy = new Entity();
+      enemy.addComponent(new CMoving(enemy,i,i));
+      enemy.addComponent(new CAI(enemy, 100));
+      manager.addEntity(enemy);
+    }
     while(true){
-      rend.repaint();
-      listener.waitForInput();
-      manager.update();
+      manager.update(rend);
       System.out.println("thing happened");
     }
   }

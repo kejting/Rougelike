@@ -1,14 +1,14 @@
 import java.awt.event.*;
 import java.util.concurrent.*;
 
-public class PlayerKeyListener implements KeyListener{
+public class PlayerKeyListener implements KeyListener, Action{
   private CountDownLatch waitLatch;
   private Entity player;
   public PlayerKeyListener(Entity p){
     player = p;
   }
   //some sort of blocking function that waits until the player makes an input
-  public void waitForInput(){
+  public void act(){
     waitLatch = new CountDownLatch(1);
     try{
       waitLatch.await();

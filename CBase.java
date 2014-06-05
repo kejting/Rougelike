@@ -6,4 +6,5 @@ abstract class CBase{
   protected CBase(Entity o){
     owner = o;
   }
+  public Entity getOwner(){return owner;}
 }

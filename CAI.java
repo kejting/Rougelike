@@ -1,17 +1,14 @@
-import java.util.*;
-
 //the AI class, mostly just a placeholder right now so that the AI at least do dsomething
-class CAI extends CBase{
-  private static LinkedList<Entity> thinkers = new LinkedList<Entity>();
-  public CAI(Entity o){
+class CAI extends CBase implements Action{
+  public CAI(Entity o, int s){
     super(o);
-    thinkers.add(o);
+    o.addComponent(new CActor(o, s, this));
   }
   private static EntityManager entityManager;
   public static void setManager(EntityManager e){
     entityManager = e;
   }
-  public void think(){
+  public void act(){
     if(entityManager == null) throw new RuntimeException("Entity manager not set for AI");
     if(owner.getComponent(CMoving.class) == null) return;
     final CMoving moving = (CMoving)owner.getComponent(CMoving.class);
@@ -32,5 +29,4 @@ class CAI extends CBase{
         moving.move(CMoving.Direction.DOWN);
     }
   }
-  public static LinkedList<Entity> getAIs(){return thinkers;}
 }
