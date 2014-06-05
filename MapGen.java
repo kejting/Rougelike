@@ -36,8 +36,8 @@ public class MapGen{
     return min + i;
   }
   
-  private boolean makeCorridor(int x, int y, int lenght, int direction){
-    int len = getRand(2, lenght);
+  private boolean makeCorridor(int x, int y, int length, int direction){
+    int len = getRand(2, length);
     int floor = tileCorridor;
     int dir = 0;
     if (direction > 0 && direction < 4) dir = direction;
