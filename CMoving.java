@@ -4,16 +4,15 @@ import java.util.*;
 
 class CMoving extends CBase{
   private int speed;
-  private int posX, posY;
+  private Position pos;
   private boolean collideable;
   private static GameMap map;
   public enum Direction{
     UP(0, -1), DOWN(0,1), LEFT(-1,0), RIGHT(1,0), NONE(0,0);
     
-    public final int offX, offY;
+    public final Position offset;
     private Direction(int x, int y){
-      offX = x;
-      offY = y;
+      offset = new Position(x,y);
     }
   }
   public CMoving(Entity o, int x, int y){
@@ -22,24 +21,22 @@ class CMoving extends CBase{
   public CMoving(Entity o,int x, int y, boolean col){
     super(o);
     if(map == null) throw new RuntimeException ("Map not set for CMoving");
-    posX = x;
-    posY = y;
+    pos = new Position(x, y);
     collideable = col;
-    map.setEntity(posX, posY, owner);
+    map.setEntity(pos, owner);
   }
   public static void setMap(GameMap m){
     map = m;
   }
   public boolean checkMove(Direction d){
-    if(!map.inBounds(posX+d.offX, posY+d.offY)) return false;
-    return(map.get(posX + d.offX, posY + d.offY).canWalk());
+    if(!map.inBounds(pos.add(d.offset))) return false;
+    return(map.get(pos.add(d.offset)).canWalk());
   }
   public boolean move(Direction d){
     if(checkMove(d)){
-      map.setEntity(posX, posY, null);
-      posX += d.offX;
-      posY += d.offY;
-      map.setEntity(posX, posY, owner);
+      map.setEntity(pos, null);
+      pos = pos.add(d.offset);
+      map.setEntity(pos, owner);
       return true;
     }
     return false;
@@ -47,6 +44,7 @@ class CMoving extends CBase{
   public boolean isCollideable(){
     return collideable;
   }
-  public int getX(){return posX;}
-  public int getY(){return posY;}
+  public int getX(){return pos.x;}
+  public int getY(){return pos.y;}
+  public Position getPos(){return pos;}
 }

@@ -1,46 +1,40 @@
-import java.util.*;
-import javax.imageio.*;
-import java.awt.image.*;
-import java.io.*;
 import java.awt.Graphics2D;
 
-//Tiles are base types read from a file
+//A cell is a component of the map that holds whatever is on it and has a base type, it is mutable
 public class Tile {
-  private final int ID;
-  private final boolean collideable = false;
-  
-  private static HashMap<Integer, Tile> tiles = new HashMap<Integer, Tile>();
-  private static final String FILENAME = "tiles.txt", IMG_FILENAME = "curses_square_16x16.png";
-  private static final BufferedImage IMG_FILE;
-  private static final int TILE_X = 16, TILE_Y = 16, TILES_PER_X = 16, TILES_PER_Y = 16;
-  
-  private Tile(int ID){
-    this.ID = ID;
+  public final TileData tileType;
+  private Entity entity;
+  private boolean discovered = false, visible = false;
+  public Tile(int ID){
+    tileType = TileData.getTile(ID);
   }
   public void draw(Graphics2D g2d, int x, int y){
-    int xPos = ID%TILES_PER_X;
-    int yPos = ID/TILES_PER_Y;
-    g2d.drawImage(IMG_FILE, x*TILE_X, y*TILE_Y, (x+1)*TILE_X, (y+1)*TILE_Y,
-                  xPos*TILE_X, yPos*TILE_Y, (xPos+1)*TILE_X, (yPos+1)*TILE_Y,null);
-  }
-  
-  static{
-    //load tiles here
-    try{
-      IMG_FILE = ImageIO.read(new File(IMG_FILENAME));
-    }catch(IOException e){
-      throw new RuntimeException("Tileset file missing");
+    if(discovered){
+      tileType.draw(g2d, x, y);
+      if(entity != null)
+        TileData.getTile(2).draw(g2d, x, y);
     }
-    for(int i = 0; i < 5; i++)
-    tiles.put(i, new Tile(i));
+    else{
+      TileData.getTile(219).draw(g2d, x,y);
+    }
   }
-  public static Tile getTile(Integer ID){
-    return tiles.get(ID);
+  public boolean canWalk(){
+    //add something if there is an entity here too
+    return(!tileType.isCollideable() && (entity == null || entity.getComponent(CMoving.class)==null || !((CMoving)entity.getComponent(CMoving.class)).isCollideable()));
   }
-  public boolean isCollideable(){
-    return collideable;
+  public boolean isOpaque(){
+    return(tileType.isOpaque());
   }
-  /*public static BufferedImage getImage(){
-    return imgFile;
-  }*/
+  public void setEntity(Entity e){
+    entity =e;
+  }
+  public Entity getEntity(){
+    return entity;
+  }
+  public void discover(){
+    discovered = true;
+  }
+  public void setVisible(boolean v){
+    visible = v;
+  }
 }

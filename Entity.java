@@ -1,7 +1,7 @@
-import java.util.HashMap;
-//What is this exactly? -Adrian
+import java.util.*;
+
 class Entity{
-  private HashMap<Class, CBase> components = new HashMap<Class, CBase>();
+  private Map<Class, CBase> components = new HashMap<Class, CBase>();
   public void addComponent(CBase component){
     components.put(component.getClass(), component);
   }

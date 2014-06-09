@@ -30,13 +30,14 @@ public class Renderer extends JPanel/* implements ActionListener*/{
   
   public static void main(String [] args){
     EntityManager manager = new EntityManager();
-    CMoving.setMap(manager.getMap());
+    manager.changeMap("map.txt");
     CAI.setManager(manager);
     PlayerKeyListener listener = new PlayerKeyListener(manager.getPlayer());
     Renderer rend = new Renderer(listener, manager);
     
     manager.getPlayer().addComponent(new CMoving(manager.getPlayer(),6 ,5));
     manager.getPlayer().addComponent(new CActor(manager.getPlayer(), 10, listener));
+    manager.getPlayer().addComponent(new CLOS(manager.getPlayer(), 6));
     
     /*Entity enemy1 = new Entity();
     enemy1.addComponent(new CMoving(enemy1, 6,6));

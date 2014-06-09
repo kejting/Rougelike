@@ -4,31 +4,35 @@ import java.awt.*;
 
 public class GameMap {
   private final int width, height;
-  private Cell cells[][];
+  private Tile tiles[][];
   public GameMap(int x, int y){
     width = x;
     height = y;
-    cells = new Cell[width][height];
+    tiles = new Tile[width][height];
     for(int i = 0; i < width; i++)
       for(int j =0; j< height; j++)
-      cells[i][j] = new Cell(0);
+      tiles[i][j] = new Tile(0);
   }
   public GameMap(String name){
     try{
       Scanner sc = new Scanner(new File(name));
       width = sc.nextInt();
       height = sc.nextInt();
-      cells = new Cell[width][height];
+      tiles = new Tile[width][height];
       for(int i = 0; i < width; i++)
         for(int j =0; j< height; j++)
-        cells[j][i] = new Cell(sc.nextInt());
+        tiles[j][i] = new Tile(sc.nextInt());
     }catch(IOException e){
       throw new RuntimeException(name+": map file missing");
     }
   }
-  public void setEntity(int x, int y, Entity e){
-    cells[x][y].setEntity(e);
+  public void setEntity(Position pos, Entity e){
+    tiles[pos.x][pos.y].setEntity(e);
   }
+  /*public void setEntity(int x, int y, Entity e){
+    setEntity(new Position(x,y),e);
+  }*/
+
   public void draw(Graphics2D g2d){
     for(int y = 0; y < height; y++){
       for(int x = 0; x < width; x++){
@@ -36,10 +40,14 @@ public class GameMap {
       }
     }
   }
-  public boolean inBounds(int x, int y){
-    return (x >= 0 && y>=0 && x< width && y <height);
+  public boolean inBounds(Position pos){
+    return (pos.x >= 0 && pos.y>=0 && pos.x< width && pos.y <height);
   }
-  public Cell get(int x, int y){return cells[x][y];}
+  public boolean inBounds(int x, int y){
+    return inBounds(new Position(x,y));
+  }
+  public Tile get(int x, int y){return get(new Position(x,y));}
+  public Tile get(Position pos){return tiles[pos.x][pos.y];}
   public int getWidth(){return width;}
   public int getHeight(){return height;}
 }

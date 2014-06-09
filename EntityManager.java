@@ -4,9 +4,8 @@ public class EntityManager{
   //should the player have his own class that extends or has an entity inside of it?
   private Entity player;
   private GameMap map;
-  private LinkedList<Entity> entities;
+  private List<Entity> entities;
   public EntityManager(){
-    map = new GameMap("map.txt");
     player = new Entity();
     entities = new LinkedList<Entity>();
   }
@@ -15,7 +14,13 @@ public class EntityManager{
     //this should do the player's action, then whatever actions any other entity has to do based on speed and such
     LinkedList<CActor> moveList = generateList();
     for(CActor actor: moveList){
-      if(actor.getOwner() == player){
+      if(actor.owner.getComponent(CLOS.class) != null){
+        ((CLOS)actor.owner.getComponent(CLOS.class)).update();
+      }
+      if(actor.owner == player){
+        for(Tile i : ((CLOS)player.getComponent(CLOS.class)).getVisible()){
+          i .discover();
+        }
         renderer.repaint();
         System.out.println("repainted");
       }
@@ -57,8 +62,13 @@ public class EntityManager{
       }
     }
   }
+  public void changeMap(String name){
+    map = new GameMap(name);
+    CMoving.setMap(map);
+    CLOS.setMap(map);
+  }
   
-  public LinkedList<Entity> getEntities(){return entities;}
+  public List<Entity> getEntities(){return entities;}
   public GameMap getMap(){ return map;}
   public Entity getPlayer(){return player;}
 }

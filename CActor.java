@@ -4,7 +4,7 @@ class CActor extends CBase{
   private int speed;
   public int currSpeed;
   private Action action;
-  private static LinkedList<CActor> actors = new LinkedList<CActor>();
+  private static List<CActor> actors = new LinkedList<CActor>();
   public CActor(Entity o, int s, Action a){
     super(o);
     if(s <= 0){
@@ -30,5 +30,5 @@ class CActor extends CBase{
     action.act();
   }
   public int getSpeed(){ return speed;}
-  public static LinkedList<CActor> getActors(){return actors;}
+  public static List<CActor> getActors(){return actors;}
 }
