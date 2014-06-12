@@ -4,55 +4,84 @@ import java.awt.event.*;
 
 public class Renderer extends JPanel/* implements ActionListener*/{
   private JFrame mainFrame;
-  private final int WINDOW_X = 600, WINDOW_Y = 400;
-  EntityManager manager;
+  private final int WINDOW_X = 640, WINDOW_Y = 480;
+  private Position offset = new Position(0,0);
+  private EntityManager manager;
+  private GUI gui;
   
   
-  public Renderer(KeyListener keyListener, EntityManager m){      
+  public Renderer(EntityManager m, GUI g){      
     manager = m;
+    gui = g;
     setDoubleBuffered(true);
     this.setPreferredSize(new Dimension(WINDOW_X,WINDOW_Y));
     mainFrame = new JFrame("Roguelike");
     mainFrame.add(this);
     mainFrame.setResizable(false);
     mainFrame.setVisible(true);
+    mainFrame.addKeyListener(g);
     mainFrame.pack();
-    mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
-    mainFrame.addKeyListener(keyListener);
+    mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
   }
+  public void updateOffset(){
+    final int tilesPerX = WINDOW_X/TileData.TILE_X, tilesPerY = WINDOW_Y/TileData.TILE_Y;
+    final int width = manager.getMap().getWidth(), height = manager.getMap().getHeight();
+    final int posX = ((CMoving)manager.getPlayer().getComponent(CMoving.class)).getX(), posY = ((CMoving)manager.getPlayer().getComponent(CMoving.class)).getY();
+    if(width <=tilesPerX)
+      offset.x = WINDOW_X/2- width*TileData.TILE_X/2; 
+    else{
+      if(posX < tilesPerX/2)
+        offset.x = 0;
+      else if(posX > width - tilesPerX/2)
+        offset.x = (tilesPerX/2 - width)*TileData.TILE_X+WINDOW_X/2;
+      else
+        offset.x = WINDOW_X/2-posX*TileData.TILE_X;
+    }
+    
+    if(height <=tilesPerY)
+      offset.y = WINDOW_Y/2- height*TileData.TILE_Y/2;    
+    else{
+      if(posY < tilesPerY/2)
+        offset.y = 0;
+      else if(posY > height - tilesPerY/2)
+        offset.y = (tilesPerY/2 - height)*TileData.TILE_Y+WINDOW_Y/2;
+      else
+        offset.y = WINDOW_Y/2-posY*TileData.TILE_Y;
+    }
+  }
+  public Position getOffset(){return offset;}
   
   @Override
   public void paintComponent(Graphics g){
+    System.out.println("repainted");
     super.paintComponent(g);
     Graphics2D g2d = (Graphics2D) g;
-    manager.getMap().draw(g2d);
+    manager.getMap().draw(g2d, this);
+    gui.draw(g2d);
   }
   
   public static void main(String [] args){
     EntityManager manager = new EntityManager();
+    Entity.setManager(manager);
     manager.changeMap("map.txt");
-    CAI.setManager(manager);
-    PlayerKeyListener listener = new PlayerKeyListener(manager.getPlayer());
-    Renderer rend = new Renderer(listener, manager);
-    
     manager.getPlayer().addComponent(new CMoving(manager.getPlayer(),6 ,5));
-    manager.getPlayer().addComponent(new CActor(manager.getPlayer(), 10, listener));
+    manager.getPlayer().addComponent(new CResources(manager.getPlayer()));
     manager.getPlayer().addComponent(new CLOS(manager.getPlayer(), 6));
+    manager.getPlayer().addComponent(new CInventory(manager.getPlayer()));
+    CAI.setManager(manager);
+    GUI gui = new GUI();
+    Renderer rend = new Renderer(manager, gui);
+    gui.setRenderer(rend);
+    gui.setPlayer(manager.getPlayer());
+    manager.getPlayer().addComponent(new CActor(manager.getPlayer(), 10, gui));
     
-    /*Entity enemy1 = new Entity();
+    Entity enemy1 = new Entity();
     enemy1.addComponent(new CMoving(enemy1, 6,6));
+    enemy1.addComponent(new CAI(enemy1, 15));
+    enemy1.addComponent(new CResources(enemy1));
     manager.addEntity(enemy1);
-    Entity enemy2 = new Entity();
-    enemy2.addComponent(new CMoving(enemy2, 7, 9));
-    enemy2.addComponent(new CAI(enemy2, 200));
-    manager.addEntity(enemy2);
-    enemy1.addComponent(new CAI(enemy1, 100));*/
-    for(int i = 0; i < 10; i++){
-      Entity enemy = new Entity();
-      enemy.addComponent(new CMoving(enemy,i,i));
-      enemy.addComponent(new CAI(enemy, 100));
-      manager.addEntity(enemy);
-    }
+    
+    
     while(true){
       manager.update(rend);
       System.out.println("thing happened");

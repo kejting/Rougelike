@@ -18,17 +18,21 @@ public class EntityManager{
         ((CLOS)actor.owner.getComponent(CLOS.class)).update();
       }
       if(actor.owner == player){
+        map.resetVisible();
         for(Tile i : ((CLOS)player.getComponent(CLOS.class)).getVisible()){
           i .discover();
         }
+        renderer.updateOffset();
         renderer.repaint();
-        System.out.println("repainted");
       }
       actor.act();
     }
   }
   public void addEntity(Entity e){
     entities.add(e);
+  }
+  public void removeEntity(Entity e){
+    entities.remove(e);
   }
   public LinkedList<CActor> generateList(){
     LinkedList<CActor> list = new LinkedList<CActor>();
@@ -43,11 +47,9 @@ public class EntityManager{
           subtract = actor.currSpeed;
         }
       }
-      System.out.println("Subtract " + subtract);
       actors = CActor.getActors().listIterator(0);
       while(actors.hasNext()){
         actor= actors.next();
-        System.out.print(actor.currSpeed + " " );
         actor.currSpeed -= subtract;
         
         //if a value in array hits 0, that item would move and this is added to the list of moves
@@ -56,7 +58,6 @@ public class EntityManager{
           list.add(actor);
         }
       }
-      System.out.println();
       if(((CActor)player.getComponent(CActor.class)).currSpeed == ((CActor)player.getComponent(CActor.class)).getSpeed()){
         return list;
       }

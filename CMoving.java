@@ -3,18 +3,10 @@
 import java.util.*;
 
 class CMoving extends CBase{
-  private int speed;
   private Position pos;
   private boolean collideable;
   private static GameMap map;
-  public enum Direction{
-    UP(0, -1), DOWN(0,1), LEFT(-1,0), RIGHT(1,0), NONE(0,0);
-    
-    public final Position offset;
-    private Direction(int x, int y){
-      offset = new Position(x,y);
-    }
-  }
+
   public CMoving(Entity o, int x, int y){
     this(o, x, y, true);
   }
@@ -25,6 +17,10 @@ class CMoving extends CBase{
     collideable = col;
     map.setEntity(pos, owner);
   }
+  @Override
+  public void destroy(){
+    map.setEntity(pos, null);
+  }
   public static void setMap(GameMap m){
     map = m;
   }
@@ -32,11 +28,23 @@ class CMoving extends CBase{
     if(!map.inBounds(pos.add(d.offset))) return false;
     return(map.get(pos.add(d.offset)).canWalk());
   }
+  public boolean canAttack(Direction d){
+    if(!map.inBounds(pos.add(d.offset))) return false;
+    return(!map.get(pos.add(d.offset)).tileType.isCollideable() && map.get(pos.add(d.offset)).getEntity() != null && map.get(pos.add(d.offset)).getEntity().getComponent(CResources.class) != null);
+  }
   public boolean move(Direction d){
     if(checkMove(d)){
       map.setEntity(pos, null);
       pos = pos.add(d.offset);
       map.setEntity(pos, owner);
+      return true;
+    }
+    return false;
+  }
+  public boolean attack(Direction d){
+    CResources res = (CResources)owner.getComponent(CResources.class);
+    if(canAttack(d)){
+      ((CResources)map.get(pos.add(d.offset)).getEntity().getComponent(CResources.class)).damage(res.getAttack());
       return true;
     }
     return false;

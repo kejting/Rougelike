@@ -8,15 +8,17 @@ public class Tile {
   public Tile(int ID){
     tileType = TileData.getTile(ID);
   }
-  public void draw(Graphics2D g2d, int x, int y){
-    if(discovered){
-      tileType.draw(g2d, x, y);
+  public void draw(Graphics2D g2d,Position offset, int x, int y){
+    if (visible){
+      tileType.draw(g2d,offset, x, y, true);
       if(entity != null)
-        TileData.getTile(2).draw(g2d, x, y);
+        TileData.getTile(2).draw(g2d,offset, x, y,true);
     }
-    else{
-      TileData.getTile(219).draw(g2d, x,y);
+    else if(discovered){
+      tileType.draw(g2d,offset, x, y);
     }
+    else
+      TileData.getTile(219).draw(g2d,offset, x,y);
   }
   public boolean canWalk(){
     //add something if there is an entity here too
@@ -33,8 +35,9 @@ public class Tile {
   }
   public void discover(){
     discovered = true;
+    visible = true;
   }
-  public void setVisible(boolean v){
-    visible = v;
+  public void resetVisible(){
+    visible = false;
   }
 }

@@ -19,9 +19,9 @@ public class GameMap {
       width = sc.nextInt();
       height = sc.nextInt();
       tiles = new Tile[width][height];
-      for(int i = 0; i < width; i++)
-        for(int j =0; j< height; j++)
-        tiles[j][i] = new Tile(sc.nextInt());
+      for(int j =0; j< height; j++)
+        for(int i = 0; i < width; i++)
+        tiles[i][j] = new Tile(sc.nextInt());
     }catch(IOException e){
       throw new RuntimeException(name+": map file missing");
     }
@@ -33,10 +33,11 @@ public class GameMap {
     setEntity(new Position(x,y),e);
   }*/
 
-  public void draw(Graphics2D g2d){
+  public void draw(Graphics2D g2d, Renderer renderer){
+    Position off = renderer.getOffset();
     for(int y = 0; y < height; y++){
       for(int x = 0; x < width; x++){
-        get(x, y).draw(g2d, x, y);
+        get(x, y).draw(g2d,off, x, y);
       }
     }
   }
@@ -45,6 +46,13 @@ public class GameMap {
   }
   public boolean inBounds(int x, int y){
     return inBounds(new Position(x,y));
+  }
+  public void resetVisible(){
+    for(int y = 0; y < height; y++){
+      for(int x = 0; x < width; x++){
+        get(x, y).resetVisible();
+      }
+    }
   }
   public Tile get(int x, int y){return get(new Position(x,y));}
   public Tile get(Position pos){return tiles[pos.x][pos.y];}

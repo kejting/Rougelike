@@ -6,4 +6,6 @@ abstract public class CBase{
   protected CBase(Entity o){
     owner = o;
   }
+  protected void destroy(){
+  }
 }

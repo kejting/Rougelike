@@ -23,11 +23,14 @@ class CActor extends CBase{
       }
       pos++;
     }
-    System.out.println(pos);
     actors.add(pos, this);
   }
   public void act(){
     action.act();
+  }
+  @Override
+  protected void destroy(){
+    actors.remove(this);
   }
   public int getSpeed(){ return speed;}
   public static List<CActor> getActors(){return actors;}
